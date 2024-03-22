@@ -1,0 +1,29 @@
+name: Fetch Discord Messages
+
+on:
+  schedule:
+    - cron:  '*/30 * * * *' # Runs every 30 minutes
+
+jobs:
+  fetch-discord-messages:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+    
+    - name: Fetch Discord messages
+      run: |
+        node fetchMessages.js
+    
+    - name: Commit and push if changed
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git add -A
+        git commit -m "Updated messages" -a || exit 0
+        git push
